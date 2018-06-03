@@ -1,11 +1,12 @@
-package ru.ea.l3.Controllers;
+package ru.ea.l3.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.ea.l3.Entities.Student;
-import ru.ea.l3.Repositories.StudentRepository;
+import ru.ea.l3.entities.Student;
+import ru.ea.l3.repositories.StudentRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -16,13 +17,21 @@ public class StudentResource {
     @Autowired
     private StudentRepository studentRepository;
 
-    @GetMapping("/students")
-    public List<Student> retrieveAllStudents() {
+    //for UI
+    @RequestMapping("/showStudents")
+    public String getAllStudents(Model model){
+        List<Student> students = studentRepository.findAll();
+        model.addAttribute("students",students);
+        return "showSt"; //todo разобраться почему не работает, хотя модель заполняется
+    }
+
+    @GetMapping("/api/students")
+    public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
-    @GetMapping("/students/{id}")
-    public Student retrieveStudent(@PathVariable long id) throws Exception {
+    @GetMapping("/api/students/{id}")
+    public Student getStudent(@PathVariable long id) throws Exception {
         Optional<Student> student = studentRepository.findById(id);
 
         if (!student.isPresent())
@@ -31,12 +40,12 @@ public class StudentResource {
         return student.get();
     }
 
-    @DeleteMapping("/students/{id}")
+    @DeleteMapping("/api/students/{id}")
     public void deleteStudent(@PathVariable long id) {
         studentRepository.deleteById(id);
     }
 
-    @PostMapping("/students")
+    @PostMapping("/api/students")
     public ResponseEntity<Object> createStudent(@RequestBody Student student) {
         Student savedStudent = studentRepository.save(student);
 
@@ -47,7 +56,7 @@ public class StudentResource {
 
     }
 
-    @PutMapping("/students/{id}")
+    @PutMapping("/api/students/{id}")
     public ResponseEntity<Object> updateStudent(@RequestBody Student student, @PathVariable long id) {
 
         Optional<Student> studentOptional = studentRepository.findById(id);

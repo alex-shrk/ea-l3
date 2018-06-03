@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Students</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<h2>List of students</h2>
+
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Passport number</th>
+    </tr>
+
+    <tr th:each="student : ${students}">
+        <td th:text="${student.id}">Id</td>
+        <td th:text="${student.name}">Name</td>
+        <td th:text="${student.passportNumber}">Passport number</td>
+    </tr>
+</table>
+</body>
+</html>
